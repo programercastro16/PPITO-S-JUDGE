@@ -1,0 +1,31 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="50%" stop-color="#facc15"/>
+      <stop offset="100%" stop-color="#eab308"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020617"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#grad-bg)" stroke="#0f172a" stroke-width="2"/>
+  <!-- Balanza estilizada -->
+  <g transform="translate(8,6)" stroke="url(#grad-gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <line x1="24" y1="6" x2="24" y2="30"/>
+    <line x1="16" y1="12" x2="32" y2="12"/>
+    <line x1="10" y1="30" x2="38" y2="30"/>
+    <!-- platos -->
+    <path d="M10 18 L6 24 H14 Z" fill="rgba(250,204,21,0.14)"/>
+    <path d="M38 18 L34 24 H42 Z" fill="rgba(250,204,21,0.14)"/>
+    <line x1="10" y1="12" x2="10" y2="18"/>
+    <line x1="38" y1="12" x2="38" y2="18"/>
+  </g>
+  <!-- Iniciales PJ -->
+  <text x="32" y="52" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        font-weight="700" font-size="14" fill="url(#grad-gold)">
+    PJ
+  </text>
+</svg>
+

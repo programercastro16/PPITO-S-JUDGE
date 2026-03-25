@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-grid">
+  <div class="card">
+    <div class="tag">Private judicial intelligence</div>
+    <h1 class="auth-hero-title">
+      Acceso exclusivo a <span class="auth-highlight">PPITO'S JUDGE</span>
+    </h1>
+    <p class="muted" style="font-size:0.95rem; max-width:640px;">
+      Crea tu cuenta y entra a un panel privado para registrar radicados, monitorear actuaciones,
+      descargar providencias y centralizar tu trazabilidad judicial en una sola interfaz.
+    </p>
+
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="metric-value">24/7</div>
+        <div class="muted">Seguimiento continuo</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">PDF</div>
+        <div class="muted">Providencias descargables</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">VIP</div>
+        <div class="muted">Panel privado por usuario</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid; gap:1rem;">
+    <div class="card">
+      <h2 class="section-title">Crear cuenta</h2>
+      <form method="post" action="{{ url_for('registro') }}">
+        <label class="muted" for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" type="text" required>
+
+        <div style="height:0.75rem;"></div>
+
+        <label class="muted" for="register-email">Correo</label>
+        <input id="register-email" name="email" type="email" required>
+
+        <div style="height:0.75rem;"></div>
+
+        <label class="muted" for="register-password">Contraseña</label>
+        <input id="register-password" name="password" type="password" required>
+
+        <div style="height:0.75rem;"></div>
+
+        <label class="muted" for="password-confirm">Confirmar contraseña</label>
+        <input id="password-confirm" name="password_confirm" type="password" required>
+
+        <div style="margin-top:0.95rem;">
+          <button class="btn btn-primary" type="submit">Solicitar acceso</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Iniciar sesión</h2>
+      <form method="post" action="{{ url_for('login') }}">
+        <label class="muted" for="login-email">Correo</label>
+        <input id="login-email" name="email" type="email" required>
+
+        <div style="height:0.75rem;"></div>
+
+        <label class="muted" for="login-password">Contraseña</label>
+        <input id="login-password" name="password" type="password" required>
+
+        <div style="margin-top:0.95rem;">
+          <button class="btn btn-primary" type="submit">Entrar al panel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

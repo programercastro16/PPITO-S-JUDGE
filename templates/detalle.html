@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <div class="actions-row" style="margin-bottom:0.7rem;">
+    <div class="tag">Acceso privado</div>
+    <div class="tag">{{ current_user.nombre }}</div>
+  </div>
+  <h2 style="margin-top:0;">Tablero del proceso</h2>
+  <p class="muted">
+    Radicado <strong>{{ radicado }}</strong>. Datos obtenidos desde Consulta de Procesos (Rama Judicial) con motor propio de PPITO'S JUDGE.
+  </p>
+  <div class="actions-row" style="flex-wrap:wrap;">
+    <form method="post" action="{{ url_for('panel') }}">
+      <input type="hidden" name="radicado" value="{{ radicado }}">
+      <button class="btn btn-primary" type="submit">Re-escanear ahora</button>
+    </form>
+    <form method="post" action="{{ url_for('detalle_descargar_pdfs', radicado=radicado) }}">
+      <button class="btn btn-primary" type="submit" style="background:linear-gradient(circle at top left,#64748b,#475569);box-shadow:none;">Descargar PDFs faltantes</button>
+    </form>
+    <a href="{{ url_for('panel') }}" class="btn-link">Volver a panel</a>
+  </div>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0;">Actuaciones</h3>
+  {% if not actuaciones %}
+    <p class="muted">No hay actuaciones registradas aún.</p>
+  {% else %}
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for a in actuaciones %}
+        <tr>
+          <td>{{ a.fecha }}</td>
+          <td>{{ a.tipo }}</td>
+          <td>{{ a.descripcion }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0;">Providencias (PDF)</h3>
+  {% if not providencias %}
+    <p class="muted">No hay providencias registradas aún.</p>
+  {% else %}
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Resumen</th>
+          <th>Documento</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for p in providencias %}
+        <tr>
+          <td>{{ p.fecha }}</td>
+          <td>{{ p.tipo }}</td>
+          <td>{{ p.resumen }}</td>
+          <td>
+            {% if p.ruta_pdf %}
+              <span class="tag tag-pdf">PDF descargado</span>
+              <div class="muted">{{ p.ruta_pdf }}</div>
+            {% elif p.enlace %}
+              <a class="btn-link" href="{{ p.enlace }}" target="_blank">Abrir en portal</a>
+            {% else %}
+              <span class="muted">Sin enlace</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+{% endblock %}
+

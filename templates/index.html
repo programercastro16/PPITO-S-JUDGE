@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="layout">
+  <div class="col-left">
+    <div class="card">
+      <h2 style="margin-top:0; font-size:1.1rem;">Añade tus radicados</h2>
+      <form method="post">
+        <label for="radicado" class="muted">Número de radicado (23 dígitos)</label>
+        <input id="radicado" name="radicado" type="text" required>
+        <div style="margin-top:0.75rem;">
+          <button class="btn btn-primary" type="submit">Agregar y escanear</button>
+        </div>
+        <p class="muted" style="margin-top:0.65rem;">
+          Puedes registrar todos tus radicados aquí. Cada uno quedará guardado en PPITO'S JUDGE para hacerles seguimiento y descargar sus providencias automáticamente.
+        </p>
+      </form>
+    </div>
+  </div>
+  <div class="col-right">
+    <div class="card">
+      <div class="actions-row">
+        <div class="tag">Panel privado</div>
+        <div class="tag">Usuario: {{ current_user.nombre }}</div>
+      </div>
+      <h2 style="margin-bottom:0.45rem;">Centro de vigilancia judicial</h2>
+      <p class="muted" style="margin:0;">
+        Réplica de uso privado: seguimiento por radicado, alertas por correo/Telegram (según configuración) y descarga de PDFs.
+      </p>
+      <div class="metric-grid" style="margin-top:1rem;">
+        <div class="metric-card">
+          <div class="muted">Radicados</div>
+          <div class="metric-value">{{ radicados|length }}</div>
+        </div>
+        <div class="metric-card">
+          <div class="muted">Actuaciones (total)</div>
+          <div class="metric-value">{{ metricas.n_actuaciones }}</div>
+        </div>
+        <div class="metric-card">
+          <div class="muted">Providencias (total)</div>
+          <div class="metric-value">{{ metricas.n_providencias }}</div>
+        </div>
+      </div>
+      {% if metricas.ultima_consulta_at %}
+        <p class="muted" style="margin-top:0.75rem; margin-bottom:0;">
+          Última consulta a fuentes: <strong>{{ metricas.ultima_consulta_at }}</strong>
+        </p>
+      {% endif %}
+      <div class="actions-row" style="margin-top:1rem;">
+        <form method="post" action="{{ url_for('panel_actualizar_todos') }}" onsubmit="return confirm('Actualizar todos los radicados en segundo plano (puede tardar varios minutos)?');">
+          <button class="btn btn-primary" type="submit">Actualizar todos</button>
+        </form>
+        <form method="post" action="{{ url_for('panel_descargar_pdfs') }}">
+          <button class="btn btn-primary" type="submit" style="background:linear-gradient(circle at top left,#64748b,#475569);box-shadow:none;">PDFs faltantes</button>
+        </form>
+      </div>
+      <p class="muted" style="margin-top:0.5rem; margin-bottom:0;">
+        El servidor también puede ejecutar ciclos automáticos cada {{ intervalo_horas }} h (variable <code>MONITOR_INTERVAL_HOURS</code>).
+      </p>
+    </div>
+    {% if fuentes %}
+    <div class="card">
+      <h2 class="section-title" style="font-size:1.05rem;">Fuentes judiciales</h2>
+      <ul class="muted" style="margin:0; padding-left:1.2rem;">
+        {% for f in fuentes %}
+          <li style="margin-bottom:0.35rem;">
+            {% if f.activa %}<span class="tag tag-pdf">Activa</span>{% else %}<span class="tag">Próxima</span>{% endif %}
+            <strong>{{ f.nombre }}</strong>
+            {% if f.nota %} — {{ f.nota }}{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    <div class="card">
+      <h2 style="margin-top:0; font-size:1.05rem;">Radicados en vigilancia VIP</h2>
+      {% if not radicados %}
+        <p class="muted">Aún no hay radicados. Ingresa tu primer proceso para iniciar el monitoreo premium.</p>
+      {% else %}
+        <table>
+          <thead>
+            <tr>
+              <th>Radicado</th>
+              <th>Resumen</th>
+              <th>Última actuación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for r in radicados %}
+            <tr>
+              <td>{{ r.numero }}</td>
+              <td>
+                <span class="muted">{{ r.n_actuaciones }} act. · {{ r.n_providencias }} prov.</span>
+              </td>
+              <td>
+                {% if r.ultima_fecha %}
+                  <div><strong>{{ r.ultima_fecha }}</strong></div>
+                  <div class="muted">{{ r.ultima_tipo }}</div>
+                  <div class="muted">{{ r.ultima_desc }}</div>
+                {% else %}
+                  <span class="muted">Sin actuaciones registradas aún</span>
+                {% endif %}
+              </td>
+              <td>
+                <div class="actions-row">
+                  <a class="btn-link" href="{{ url_for('detalle_radicado', radicado=r.numero) }}">Abrir tablero</a>
+                  <form method="post" action="{{ url_for('eliminar_radicado', radicado=r.numero) }}" onsubmit="return confirm('Quitar este radicado de tu panel?');">
+                    <button class="btn-link" type="submit">Quitar del panel</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+

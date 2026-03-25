@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: judgescrapper-pipito
+    env: docker
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: WEB_APP_DEBUG
+        value: "false"
+      - key: WEB_APP_HOST
+        value: "0.0.0.0"
+      - key: ENABLE_BACKGROUND_MONITOR
+        value: "false"
+      - key: MONITOR_INTERVAL_HOURS
+        value: "6"
+      - key: DB_PATH
+        value: "/data/monitor_radicados.db"
+      - key: CARPETA_PDF_PROVIDENCIAS
+        value: "/data/providencias_pdf"
+      - key: WEB_APP_SECRET_KEY
+        generateValue: true
+    disk:
+      name: judgescrapper-data
+      mountPath: /data
+      sizeGB: 1
