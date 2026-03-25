@@ -59,6 +59,15 @@ def _intervalo_monitor_horas() -> float:
         return 6.0
 
 
+def _scraper_headless_default() -> bool:
+    """
+    Define si Playwright corre en headless al disparar escaneos desde la web.
+    En hosting (Render) debe ser True para evitar errores de X server.
+    """
+    raw = os.environ.get("SCRAPER_HEADLESS", "true").strip().lower()
+    return raw in ("1", "true", "yes", "on")
+
+
 def background_monitor_loop() -> None:
     """Hilo en segundo plano que actualiza todos los radicados cada X horas."""
     while True:
@@ -225,11 +234,10 @@ def panel():
     if request.method == "POST":
         radicado = (request.form.get("radicado") or "").strip()
         if radicado:
-            # Ejecuta el monitor cuando se agrega un radicado desde la web.
-            # Usamos headless=False para que puedas ver el navegador trabajando.
+            # En servidores sin entorno gráfico (ej. Render), debe ser headless.
             res = ejecutar_monitor(
                 radicado,
-                headless=False,
+                headless=_scraper_headless_default(),
                 descargar_pdf=True,
             )
             vincular_radicado_a_usuario(user["id"], radicado)
